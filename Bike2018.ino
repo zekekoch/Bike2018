@@ -14,7 +14,7 @@ const byte ledPinCount = 2;
 
 // each tube has a different number of lights
 const int longestTube = 42;
-const int tubeLengths[numTubes] = {39, 40, 42, 32, 42, 40, 39} ;
+const int tubeLengths[numTubes] = {39, 40, 42, 32, 41, 40, 39} ;
 const int tubeStart[numTubes] = {0, 39, 79, 121, 79, 39, 0};
 const byte tubes[numTubes] = {0,0,0,0,1,1,1};
 const byte tubeDirection[numTubes] = {0,1,0,1,0,1,0};
@@ -188,15 +188,15 @@ int mapLed(int led, int from, int to)
 void showLeds()
 {
   printLedArray();
-  
+
+  // loop over my tubes
   for(byte tube = 0; tube < numTubes; tube++) 
   {
+    
     byte fastLedStrip = tubes[tube];
 
-    //Serial.print(tube);Serial.print(" direction ");Serial.println(tubeDirection[tube]);
     if (0 == tubeDirection[tube])
     {      
-      //Serial.println("forward");
       for(int iLed = 0; iLed < tubeLengths[tube]; iLed++) 
       {
           realLeds[fastLedStrip][iLed + tubeStart[tube]] = leds[tube][iLed];
@@ -204,12 +204,9 @@ void showLeds()
     }
     else
     {      
-      //Serial.println("backward");
       for(int iLed = 0; iLed < tubeLengths[tube]; iLed++) 
       {
-        //Serial.print("tube ");Serial.print(tube);Serial.print("strip ");Serial.print(fastLedStrip);Serial.print("tubeStart");Serial.print(tubeStart[tube]);
-        //Serial.print(" [");Serial.print(tubeStart[tube] - iLed); Serial.print("]=[");Serial.print(iLed);Serial.print("]");Serial.println();
-        realLeds[fastLedStrip][tubeStart[tube] - iLed] = leds[tube][iLed];
+        realLeds[fastLedStrip][tubeStart[tube] + tubeLengths[tube] -1 - iLed] = leds[tube][iLed];
       }
     }
   }
@@ -218,6 +215,7 @@ void showLeds()
   LEDS.show();
   delay(3000);
 }
+
 
 void printLedArray()
 {
